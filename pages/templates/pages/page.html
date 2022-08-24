@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block link %}
+<link href="{% static 'css/categories.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+
+{{ body|safe }}
+
+{% endblock %}
+
