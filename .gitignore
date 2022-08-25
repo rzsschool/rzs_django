@@ -6,5 +6,4 @@ venv
 .idea
 tmp
 static
-passenger_wsgi.py
 rzsgymn/wsgi.py
