@@ -134,6 +134,7 @@ class News(models.Model):
     content = HTMLField()
     date_created = models.DateField(verbose_name='Дата публікації')
     is_published = models.BooleanField(default=True, verbose_name='Публікувати')
+    number_of_views = models.PositiveIntegerField(default=0, verbose_name='Кількість переглядів')
 
     def __str__(self):
         return self.title[:20]

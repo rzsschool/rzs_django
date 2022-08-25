@@ -41,6 +41,9 @@ def blog(request):
 
 def blog_detail(request, pk):
     post = get_object_or_404(News, pk=pk)
+    if post.number_of_views < 10 ** 6:
+        post.number_of_views += 1
+        post.save()
     images_of_post = post.imageofpost_set.all()
     count_image = images_of_post.count()
     related_posts = News.objects.filter(categories__name=post.categories).order_by('-date_created')[:4]

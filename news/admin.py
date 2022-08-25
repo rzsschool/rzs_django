@@ -15,6 +15,10 @@ class NewsAdmin(admin.ModelAdmin):
         'author',
         'categories',
         'is_published',
+        'number_of_views',
+    )
+    readonly_fields = (
+        'number_of_views',
     )
 
     inlines = [ImageOfPostInline]
