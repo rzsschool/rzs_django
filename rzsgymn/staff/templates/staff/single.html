@@ -1,0 +1,175 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block link %}
+<link href="{% static 'css/categories.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<!-- Header Start -->
+<div class="container-fluid bg-primary mb-5">
+    <div class="container">
+        <!--        <img src="/media/staff/team-4.jpg" class="img-fluid rounded-circle mx-auto mb-3" style="width: 500px;">-->
+        <div class="row py-4 align-items-center">
+
+            <div class="position-relative overflow-hidden col-lg-4 text-center">
+                <img class="img-fluid rounded-circle" src="{{ person.photo.url }}" style="width: 300px;"
+                     alt="person_photo">
+            </div>
+            <div class="col-lg-8 text-white text-center">
+                <h1 class="mb-3 mt-3 text-white">{{ person.get_fullname }}</h1>
+
+                {% with administration=person.administration %}
+                {% if administration %}
+                <h5 class="text-white">{{ administration.position }}</h5>
+                {% endif %}
+                {% endwith %}
+
+                {% with teacher=person.teacher %}
+                {% if teacher %}
+                <h5 class="text-white">
+                    {% if person.sex %}
+                    Вчитель
+                    {% else %}
+                    Вчителька
+                    {% endif %}
+                    {{ teacher.lessons.all|join:', ' }}
+                </h5>
+                {% endif %}
+                {% endwith %}
+
+                {% for cat in person.otherstaff.categories.all %}
+                <h5 class="text-white">{{ cat }}</h5>
+                {% endfor %}
+
+                {% if info_about_teacher %}
+                <p>{{ info_about_teacher }}</p>
+                {% endif %}
+
+                {% if person.life_credo %}
+                <p>Життєве кредо: {{ person.life_credo }}</p>
+                {% endif %}
+
+                {% with socialnetwork=person.socialnetworkofuser_set.all %}
+                {% if socialnetwork %}
+                <div>
+                    {% for network in socialnetwork %}
+                    <a class="btn btn-outline-light text-center mr-2 px-0" style="width: 38px; height: 38px;"
+                       href="{{ network.link }}" target="_blank">
+                        <i class="fab fa-{{ network.type_of_social_network.class_name }}"></i>
+                    </a>
+                    {% endfor %}
+                </div>
+                {% endif %}
+                {% endwith %}
+
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Header End -->
+
+<!-- Detail Start -->
+<div class="container pb-5">
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="mb-5">
+                {{ person.about_me|safe }}
+
+                <!-- Certificates block-->
+                {% if certificates %}
+                <table class="table">
+                    <thead class="bg-primary text-white">
+                    <tr class="text-center">
+                        <th scope="col" class="align-middle">Назва</th>
+                        <th scope="col" class="align-middle">Тип документу</th>
+                        <th scope="col" class="align-middle">Платформа</th>
+                        <th scope="col" class="align-middle">К-ть годин</th>
+                        <th scope="col" class="align-middle">Дата видачі</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for certificate in certificates %}
+                    <tr class="text-center">
+                        <td class="text-left">
+                            <a href="{{ certificate.link }}" target="_blank">{{ certificate.name }}</a>
+                        </td>
+                        <td>{{ certificate.type_doc }}</td>
+
+                        {% if certificate.platform %}
+                        {% with platform_link=certificate.platform.link %}
+                        {% if platform_link %}
+                        <td>
+                            <a href="{{ platform_link }}" target="_blank">{{ certificate.platform }}</a>
+                        </td>
+
+                        {% else %}
+                        <td>{{ certificate.platform }}</td>
+                        {% endif %}
+                        {% endwith %}
+                        {% else %}
+                        <td>---</td>
+                        {% endif %}
+
+
+                        {% if certificate.number_of_hours %}
+                        <td>{{ certificate.number_of_hours }}</td>
+                        {% else %}
+                        <td>---</td>
+                        {% endif %}
+
+                        <td>{{ certificate.date|date:'Y.m.d'}}</td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="col-lg-4 mt-5 mt-lg-0">
+
+            <!-- Lessons List -->
+            <div class="mb-5">
+                <h2 class="mb-4">Предмети</h2>
+                <ul class="list-group list-group-flush">
+
+                    {% for lesson in lessons %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                        <a href="">{{ lesson.name|title }}</a>
+                        <span class="badge badge-primary badge-pill">{{ lesson.teacher_set.count }}</span>
+                    </li>
+                    {% endfor %}
+
+                </ul>
+            </div>
+
+
+            <!-- Category List -->
+            <div class="mb-5">
+                <h2 class="mb-4">Категорії</h2>
+                <ul class="list-group list-group-flush">
+
+                    {% for category in categories %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                        <a href="">{{ category.name }}</a>
+                        <span class="badge badge-primary badge-pill">{{ category.teacher_set.count }}</span>
+                    </li>
+                    {% endfor %}
+
+                </ul>
+            </div>
+
+            <!-- Plain Text -->
+            <!--            <div>-->
+            <!--                <h2 class="mb-4">Plain Text</h2>-->
+            <!--                Aliquyam sed lorem stet diam dolor sed ut sit. Ut sanctus erat ea est aliquyam dolor et. Et no-->
+            <!--                consetetur eos labore ea erat voluptua et. Et aliquyam dolore sed erat. Magna sanctus sed eos tempor-->
+            <!--                rebum dolor, tempor takimata clita sit et elitr ut eirmod.-->
+            <!--            </div>-->
+        </div>
+    </div>
+</div>
+<!-- Detail End -->
+
+{% endblock %}
