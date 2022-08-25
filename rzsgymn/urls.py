@@ -13,9 +13,9 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.conf.urls.static import static
+from django.conf.urls.static import static, serve
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path, include, re_path
 
 from rzsgymn import settings
 
@@ -26,6 +26,8 @@ urlpatterns = [
     path('', include('pages.urls')),
     path('', include('staff.urls')),
     path('tinymce/', include('tinymce.urls')),
+    re_path(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
+    re_path(r'^static/(?P<path>.*)$', serve, {'document_root': settings.STATIC_ROOT}),
 ]
 
 if settings.DEBUG:
